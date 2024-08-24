@@ -339,8 +339,11 @@ export function innerJoin<T>(source: T[]) {
  * @returns An object containing three methods: `pickKeys`, `removeKeys`, and `merge`.
  *
  */
-export function object<T extends object>(obj: T) {
-  const clonedObj = deepClone(obj); // Assume deepClone is implemented and is type-safe
+export function object<T extends object>(
+  obj: T,
+  options: StructuredSerializeOptions
+) {
+  const clonedObj = deepClone(obj, options); // Assume deepClone is implemented and is type-safe
 
   return {
     /**
@@ -414,7 +417,7 @@ export function object<T extends object>(obj: T) {
      * console.log(cloned); // Output: Deep clone of the original object
      */
     deepClone(): T {
-      return deepClone(clonedObj);
+      return deepClone(clonedObj, options);
     },
 
     /**
