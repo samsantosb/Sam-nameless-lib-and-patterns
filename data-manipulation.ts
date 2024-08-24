@@ -32,8 +32,8 @@ import { deepStrictEqual } from "assert";
  * console.log(originalNestedObject === clonedNestedObject); // Output: false
  * console.log(originalNestedObject.person === clonedNestedObject.person); // Output: false
  */
-function deepClone<T>(obj: T): T {
-  return structuredClone(obj);
+function deepClone<T>(obj: T, options: StructuredSerializeOptions): T {
+  return structuredClone(obj, options);
 }
 
 /**
@@ -71,7 +71,7 @@ function deepClone<T>(obj: T): T {
  * const nestedObject2 = { person: { name: 'John', age: 30 }};
  * console.log(deepEqual<{ person: { name: string; age: number } }>(nestedObject1, nestedObject2)); // Output: true
  */
-function deepEqual<T>(a: T, b: T): boolean {
+function deepEqual(a: unknown, b: unknown): boolean {
   try {
     // Assuming deepStrictEqual is defined or imported from an assertion library
     deepStrictEqual(a, b);
@@ -136,10 +136,10 @@ function deepFreeze<T extends Record<string, any>>(object: T): T {
  * const userMap = createMapDictionary(users, 'id');
  * console.log(userMap.get(1)); // Outputs: { id: 1, name: 'Alice' }
  */
-export function createMapDictionary<T, K extends keyof T>(
-  dataArray: T[],
-  key: K
-): Map<T[K], T> {
+export function createMapDictionary<
+  const T extends Record<PropertyKey, any>,
+  K extends keyof T
+>(dataArray: ReadonlyArray<T>, key: K): Map<T[K], T> {
   return dataArray.reduce<Map<T[K], T>>((acc, item) => {
     acc.set(item[key], item);
     return acc;
@@ -523,22 +523,18 @@ export function buildOptionalObject<T extends object>(fields: T): Partial<T> {
   }, {} as Partial<T>);
 }
 
-
-
 const person = {
-  name: 'Alice',
+  name: "Alice",
   age: 30,
-  city: 'New York',
+  city: "New York",
 };
 
-const picked = object(person).removeKeys('city', 'city');
+const picked = object(person).removeKeys("city", "city");
 
 const obj = {
-  name: 'Alice',
+  name: "Alice",
   age: 30,
-  city: 'New York',
+  city: "New York",
 };
 
-const newObject = object(obj).merge({ country: 'USA' });
-
-
+const newObject = object(obj).merge({ country: "USA" });
