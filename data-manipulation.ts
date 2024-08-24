@@ -136,14 +136,16 @@ function deepFreeze<T extends Record<string, any>>(object: T): T {
  * const userMap = createMapDictionary(users, 'id');
  * console.log(userMap.get(1)); // Outputs: { id: 1, name: 'Alice' }
  */
-export function createMapDictionary<
-  const T extends Record<PropertyKey, any>,
-  K extends keyof T
->(dataArray: ReadonlyArray<T>, key: K): Map<T[K], T> {
-  return dataArray.reduce<Map<T[K], T>>((acc, item) => {
+export function createMapDictionary<const T extends Record<PropertyKey, any>>(
+  dataArray: ReadonlyArray<T>,
+  key: keyof T
+): Map<T[typeof key], T> {
+  type Key = typeof key;
+
+  return dataArray.reduce<Map<T[Key], T>>((acc, item) => {
     acc.set(item[key], item);
     return acc;
-  }, new Map<T[K], T>());
+  }, new Map<T[Key], T>());
 }
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
