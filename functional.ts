@@ -264,5 +264,3 @@ export const getDateRange = (initialDate: Date, finalDate: Date): Date[] => {
 
   return dates;
 };
-
-
